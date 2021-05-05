@@ -56,11 +56,6 @@ export default function App() {
     setSecPt(polarToCartesian(secR, secAngle));
   }, 1000);
 
-  const twelvePos: coord = polarToCartesian(
-    BASE_DIMENSION / 2 - 40,
-    Math.PI / 2
-  );
-
   return (
     <div className="App">
       <h1>React SVG Clock</h1>

@@ -15,7 +15,7 @@ const secR = RADIUS * 0.7;
 const hourR = RADIUS * 0.4;
 
 const getAngleFromRatio = (ratio: number): number => {
-  return ratio * 2 * Math.PI;
+  return Math.PI/2 + ratio * 2 * Math.PI;
 };
 
 const polarToCartesian = (r: number, angle: number): coord => {

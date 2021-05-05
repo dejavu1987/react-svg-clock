@@ -48,6 +48,15 @@ export default function Clock() {
       {hourAngle}
       {minAngle}
       {secAngle}
+
+      <h4>Test 0deg</h4>
+      {getAngleFromRatio(0 / 12)} === {0}
+      <h4>Test 360deg</h4>
+      {getAngleFromRatio(12 / 12)} === {2 * Math.PI}
+      <h4>Test 180deg</h4>
+      {getAngleFromRatio(6 / 12)} === {Math.PI}
+      <h4>Test 90deg</h4>
+      {getAngleFromRatio(3 / 12)} === {Math.PI / 2}
     </div>
   );
 }

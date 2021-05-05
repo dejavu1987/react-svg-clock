@@ -10,6 +10,9 @@ type coord = {
 
 const BASE_DIMENSION = 400;
 const RADIUS = BASE_DIMENSION / 2;
+const minR = RADIUS * 0.74;
+const secR = RADIUS * 0.7;
+const hourR = RADIUS * 0.4;
 
 const getAngleFromRatio = (ratio: number): number => {
   return ratio * 2 * Math.PI;
@@ -31,6 +34,10 @@ export default function Clock() {
   const [minAngle, setMinAngle] = useState<number>(0);
   const [secAngle, setSecAngle] = useState<number>(0);
 
+  const [hourPt, setHourPt] = useState<coord>();
+  const [minPt, setMinPt] = useState<coord>();
+  const [secPt, setSecPt] = useState<coord>();
+
   useInterval(() => {
     const now = new Date();
 
@@ -45,6 +52,10 @@ export default function Clock() {
     setHourAngle(getAngleFromRatio(h / 12));
     setMinAngle(getAngleFromRatio(m / 60));
     setSecAngle(getAngleFromRatio(s / 60));
+
+    setHourPt(polarToCartesian(hourR, hourAngle));
+    setMinPt(polarToCartesian(minR, minAngle));
+    setSecPt(polarToCartesian(secR, secAngle));
 
   }, 1000);
 
@@ -108,6 +119,31 @@ export default function Clock() {
             </>
           );
         })}
+        {hourPt && (
+          <line
+            x1={BASE_DIMENSION / 2}
+            y1={BASE_DIMENSION / 2}
+            stroke="white"
+            x2={hourPt.x}
+            y2={hourPt.y}
+            stroke-width={4}
+            markerEnd="url(#head)"
+          ></line>
+        )}
+        {minPt && (
+          <line
+            x1={BASE_DIMENSION / 2}
+            y1={BASE_DIMENSION / 2}
+            stroke="#aaa"
+            x2={minPt.x}
+            y2={minPt.y}
+            stroke-width={2}
+            markerEnd="url(#head)"
+          ></line>
+        )}
+        {secPt && (
+          <circle r={9} fill="white" cx={secPt.x} cy={secPt.y}></circle>
+        )}
       </svg>
     </div>
   );

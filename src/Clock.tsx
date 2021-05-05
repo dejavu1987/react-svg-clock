@@ -3,9 +3,23 @@ import "./styles.css";
 
 import useInterval from "./useInterval";
 
+type coord = {
+  x: number;
+  y: number;
+};
+
+const BASE_DIMENSION = 400;
+const RADIUS = BASE_DIMENSION / 2;
 
 const getAngleFromRatio = (ratio: number): number => {
   return ratio * 2 * Math.PI;
+};
+
+const polarToCartesian = (r: number, angle: number): coord => {
+  return {
+    x: r * Math.cos(angle) + RADIUS,
+    y: -r * Math.sin(angle) + RADIUS
+  };
 };
 
 export default function Clock() {
@@ -16,7 +30,6 @@ export default function Clock() {
   const [hourAngle, setHourAngle] = useState<number>(0);
   const [minAngle, setMinAngle] = useState<number>(0);
   const [secAngle, setSecAngle] = useState<number>(0);
-
 
   useInterval(() => {
     const now = new Date();
@@ -32,7 +45,7 @@ export default function Clock() {
     setHourAngle(getAngleFromRatio(h / 12));
     setMinAngle(getAngleFromRatio(m / 60));
     setSecAngle(getAngleFromRatio(s / 60));
-    
+
   }, 1000);
 
 
@@ -45,18 +58,27 @@ export default function Clock() {
       <h3>
         Hour: {hour}, Minutes: {min}, Seconds: {sec}
       </h3>
-      {hourAngle}
-      {minAngle}
-      {secAngle}
-
-      <h4>Test 0deg</h4>
-      {getAngleFromRatio(0 / 12)} === {0}
-      <h4>Test 360deg</h4>
-      {getAngleFromRatio(12 / 12)} === {2 * Math.PI}
-      <h4>Test 180deg</h4>
-      {getAngleFromRatio(6 / 12)} === {Math.PI}
-      <h4>Test 90deg</h4>
-      {getAngleFromRatio(3 / 12)} === {Math.PI / 2}
+      <svg width={BASE_DIMENSION} height={BASE_DIMENSION}>
+        <circle
+          r={RADIUS}
+          cx={RADIUS}
+          cy={RADIUS}
+          fill="#333"
+        ></circle>
+        <circle
+          r={(RADIUS) * 0.7}
+          cx={RADIUS}
+          cy={RADIUS}
+          fill="rgba(0,0,0,0.3)"
+          stroke="white"
+        ></circle>
+        <circle
+          r={10}
+          fill="white"
+          cx={RADIUS}
+          cy={RADIUS}
+        ></circle>
+      </svg>
     </div>
   );
 }

@@ -78,6 +78,36 @@ export default function Clock() {
           cx={RADIUS}
           cy={RADIUS}
         ></circle>
+        {new Array(12).fill("").map((d, i) => {
+          const numPos = polarToCartesian(
+            RADIUS - 25,
+            getAngleFromRatio(i / 12)
+          );
+          return (
+            <>
+              <text
+                x={numPos.x}
+                y={numPos.y}
+                fill="white"
+                textAnchor="middle"
+                dy=".5rem"
+                fontSize="2rem"
+              >
+                {i}
+              </text>
+              <text
+                x={numPos.x}
+                y={numPos.y}
+                fill="white"
+                textAnchor="middle"
+                dx="-1rem"
+                fontSize=".5rem"
+              >
+              {i*5}
+              </text>
+            </>
+          );
+        })}
       </svg>
     </div>
   );

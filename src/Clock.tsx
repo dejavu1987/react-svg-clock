@@ -30,10 +30,6 @@ export default function Clock() {
   const [min, setMin] = useState<number>(0);
   const [sec, setSec] = useState<number>(0);
 
-  const [hourAngle, setHourAngle] = useState<number>(0);
-  const [minAngle, setMinAngle] = useState<number>(0);
-  const [secAngle, setSecAngle] = useState<number>(0);
-
   const [hourPt, setHourPt] = useState<coord>();
   const [minPt, setMinPt] = useState<coord>();
   const [secPt, setSecPt] = useState<coord>();
@@ -42,20 +38,17 @@ export default function Clock() {
     const now = new Date();
 
     const m = now.getMinutes();
-    const h = now.getHours();
+    let h = now.getHours();
+    h = h > 11 ? h - 12 : h;
     const s = now.getSeconds();
     
-    setHour(h > 11 ? h - 12 : h);
+    setHour(h);
     setMin(m);
     setSec(s);
 
-    setHourAngle(getAngleFromRatio(h / 12));
-    setMinAngle(getAngleFromRatio(m / 60));
-    setSecAngle(getAngleFromRatio(s / 60));
-
-    setHourPt(polarToCartesian(hourR, hourAngle));
-    setMinPt(polarToCartesian(minR, minAngle));
-    setSecPt(polarToCartesian(secR, secAngle));
+    setHourPt(polarToCartesian(hourR, getAngleFromRatio((h + m / 60) / 12)));
+    setMinPt(polarToCartesian(minR, getAngleFromRatio(m / 60)));
+    setSecPt(polarToCartesian(secR, getAngleFromRatio(s / 60)));
 
   }, 1000);
 
@@ -67,21 +60,48 @@ export default function Clock() {
         Polar coordinates fundamentals
       </h2>
       <h3>
-        Hour: {hour}, Minutes: {min}, Seconds: {sec}
+        {hour}:{min}:{sec}
       </h3>
       <svg width={BASE_DIMENSION} height={BASE_DIMENSION}>
+        <defs>
+          <marker
+            id="head"
+            orient="auto"
+            markerWidth="6"
+            markerHeight="6"
+            refX="0.1"
+            refY="2"
+          >
+            <path d="M0,0 V4 L6,2 Z" fill="white" />
+          </marker>
+        </defs>
+        <filter id="dropshadow" height="130%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="3"/> 
+          <feOffset dx="2" dy="2" result="offsetblur"/> 
+          <feComponentTransfer>
+            <feFuncA type="linear" slope="0.5"/>
+          </feComponentTransfer>
+          <feMerge> 
+            <feMergeNode/> 
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
         <circle
-          r={RADIUS}
+          r={RADIUS-6}
           cx={RADIUS}
           cy={RADIUS}
-          fill="#333"
+          fill="#444"
+          stroke="#caf"
+          style={{filter:`url(#dropshadow)`}}
+          strokeWidth="2"
         ></circle>
         <circle
-          r={(RADIUS) * 0.7}
+          r={(RADIUS) * 0.65}
           cx={RADIUS}
           cy={RADIUS}
-          fill="rgba(0,0,0,0.3)"
-          stroke="white"
+          fill="rgba(255,255,255,0.2)"
+          stroke="#ccc"
+          style={{filter:`url(#dropshadow)`}}
         ></circle>
         <circle
           r={10}
@@ -91,7 +111,7 @@ export default function Clock() {
         ></circle>
         {new Array(12).fill("").map((d, i) => {
           const numPos = polarToCartesian(
-            RADIUS - 25,
+            RADIUS - 32,
             getAngleFromRatio(i / 12)
           );
           return (
@@ -128,6 +148,7 @@ export default function Clock() {
             y2={hourPt.y}
             stroke-width={4}
             markerEnd="url(#head)"
+            style={{filter:`url(#dropshadow)`}}
           ></line>
         )}
         {minPt && (
@@ -139,10 +160,13 @@ export default function Clock() {
             y2={minPt.y}
             stroke-width={2}
             markerEnd="url(#head)"
+            style={{filter:`url(#dropshadow)`}}
           ></line>
         )}
         {secPt && (
-          <circle r={9} fill="white" cx={secPt.x} cy={secPt.y}></circle>
+          <circle r={9} fill="white" cx={secPt.x} cy={secPt.y}
+          style={{filter:`url(#dropshadow)`}}
+          ></circle>
         )}
       </svg>
     </div>

@@ -62,7 +62,10 @@ export default function Clock() {
       <h3>
         {hour}:{min}:{sec}
       </h3>
-      <svg width={BASE_DIMENSION} height={BASE_DIMENSION}>
+      <svg
+        viewBox={`0 0 ${BASE_DIMENSION} ${BASE_DIMENSION}`}
+        style={{ width: "95vw" }}
+      >
         <defs>
           <marker
             id="head"
@@ -165,7 +168,6 @@ export default function Clock() {
         )}
         {secPt && (
           <circle r={9} fill="white" cx={secPt.x} cy={secPt.y}
-          style={{filter:`url(#dropshadow)`}}
           ></circle>
         )}
       </svg>

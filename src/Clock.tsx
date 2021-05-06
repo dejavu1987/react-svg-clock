@@ -39,14 +39,14 @@ export default function Clock() {
 
     const m = now.getMinutes();
     let h = now.getHours();
-    h = h > 11 ? h - 12 : h;
+    // h = h > 11 ? h - 12 : h;
     const s = now.getSeconds();
     
     setHour(h);
     setMin(m);
     setSec(s);
 
-    setHourPt(polarToCartesian(hourR, getAngleFromRatio((h + m / 60) / 12)));
+    setHourPt(polarToCartesian(hourR, getAngleFromRatio((h + m / 60) / 24)));
     setMinPt(polarToCartesian(minR, getAngleFromRatio(m / 60)));
     setSecPt(polarToCartesian(secR, getAngleFromRatio(s / 60)));
 
@@ -109,10 +109,10 @@ export default function Clock() {
           cx={RADIUS}
           cy={RADIUS}
         ></circle>
-        {new Array(12).fill("").map((d, i) => {
+        {new Array(24).fill("").map((d, i) => {
           const numPos = polarToCartesian(
             RADIUS - 32,
-            getAngleFromRatio(i / 12)
+            getAngleFromRatio(i / 24)
           );
           return (
             <>
@@ -122,20 +122,22 @@ export default function Clock() {
                 fill="white"
                 textAnchor="middle"
                 dy=".5rem"
-                fontSize="2rem"
+                fontSize="1.2rem"
               >
                 {i}
               </text>
+              {i % 2 ===0 && 
               <text
                 x={numPos.x}
                 y={numPos.y}
                 fill="white"
                 textAnchor="middle"
-                dx="-1rem"
+                dx="-0.8rem"
                 fontSize=".5rem"
               >
-              {i*5}
-              </text>
+              {i*2.5}
+              </text>}
+              
             </>
           );
         })}
